@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String
+  phone     String?
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model VolunteerRegistration {
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String
+  phone       String
+  address     String?
+  interests   String[]
+  experience  String?
+  createdAt   DateTime @default(now())
+}
+
+model IssueReport {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  category    String
+  location    String?
+  status      String   @default("PENDING") // PENDING, IN_PROGRESS, RESOLVED
+  contactName String?
+  contactInfo String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ServiceRequest {
+  id          String   @id @default(cuid())
+  serviceType String
+  description String
+  name        String
+  contact     String
+  status      String   @default("OPEN")
+  createdAt   DateTime @default(now())
+}

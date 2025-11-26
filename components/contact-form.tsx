@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
+import { submitContactForm } from "@/app/actions/contact"
 
 const schema = z.object({
     firstName: z.string().min(1, "First name is required"),
@@ -23,12 +24,22 @@ export function ContactForm() {
     const [success, setSuccess] = useState(false)
 
     const onSubmit = async (data: FormData) => {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        console.log(data)
-        setSuccess(true)
-        reset()
-        setTimeout(() => setSuccess(false), 3000)
+        const formData = new FormData()
+        formData.append("firstName", data.firstName)
+        formData.append("lastName", data.lastName)
+        formData.append("email", data.email)
+        if (data.phone) formData.append("phone", data.phone)
+        formData.append("message", data.message)
+
+        const result = await submitContactForm(null, formData)
+
+        if (result.success) {
+            setSuccess(true)
+            reset()
+            setTimeout(() => setSuccess(false), 3000)
+        } else {
+            alert(result.message)
+        }
     }
 
     return (
